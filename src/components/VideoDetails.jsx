@@ -7,7 +7,7 @@ const VideoDetails = ({ videoId }) => {
   const theme = useTheme()
   const [expanded, setExpanded] = React.useState(false)
 
-  const videosResponse = useSelector((state) => state.data.videosResponse)
+  const videoResponse = useSelector((state) => state.data.videoResponse)
 
   return (
     <Card
@@ -42,9 +42,7 @@ const VideoDetails = ({ videoId }) => {
             whiteSpace: 'pre-line',
           }}
           dangerouslySetInnerHTML={{
-            __html: videosResponse.items
-              .filter((item) => item.id === videoId)
-              .map((item) => item.snippet.description)[0]
+            __html: videoResponse.items[0].snippet.description
               .replace(/#(\w+)/g, '<a class="hashtag" href="tag/$1">#$1</a>')
               // eslint-disable-next-line no-useless-escape
               .replace(/(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#%?=~_|!:,.;]*)([-A-Z0-9+&@#%?\/=~_|!:,.;]*)[-A-Z0-9+&@#\/%=~_|])/gi, '<a target="_blank" href="$1">$1</a>'),

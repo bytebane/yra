@@ -1,6 +1,7 @@
 import { STORE_DATA } from '../actions/actionTypes'
 
 const dataState = {
+  videoResponse: {},
   videosResponse: {},
   channelResponse: {},
   commentsResponse: {},
@@ -9,6 +10,11 @@ const dataState = {
 
 const dataReducer = (state = dataState, action) => {
   switch (action.type) {
+    case STORE_DATA.VIDEODATA:
+      return {
+        ...state,
+        videoResponse: action.payload,
+      }
     case STORE_DATA.VIDEOSDATA:
       return {
         ...state,

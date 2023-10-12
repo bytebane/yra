@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden;
+}
+
 .hashtag {
   text-decoration: none;
   pointer-events: none;

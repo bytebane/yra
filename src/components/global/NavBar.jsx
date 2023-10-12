@@ -1,7 +1,6 @@
 import React from 'react'
-import { styled } from '@mui/material/styles'
-import { AppBar, Box, Toolbar, IconButton, Link, Container, alpha, InputBase, Tooltip, useMediaQuery } from '@mui/material'
-import { Menu as MenuIcon, Search as SearchIcon, MoreVert as MoreIcon, Mic as MicIcon, ArrowBack } from '@mui/icons-material'
+import { AppBar, Box, Toolbar, IconButton, Link, Container, Tooltip, useMediaQuery } from '@mui/material'
+import { Menu as MenuIcon, MoreVert as MoreIcon, Search as SearchIcon, Mic as MicIcon } from '@mui/icons-material'
 import AvatarIcon from '@mui/icons-material/AccountCircleOutlined'
 import { useTheme } from '@mui/material/styles'
 import { useDispatch } from 'react-redux'
@@ -12,70 +11,7 @@ import YTLogoDark from '../../assets/yt_logo_rgb_dark.png'
 import YTLogoLight from '../../assets/yt_logo_rgb_light.png'
 import SettingsMenu from '../SettingsMenu'
 
-const Search = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  position: 'relative',
-  borderRadius: 50,
-  backgroundColor: alpha(theme.palette.common.black, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.black, 0.25),
-  },
-  marginRight: theme.spacing(1),
-  marginLeft: 0,
-  width: '100%',
-  minWidth: '270px',
-}))
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 3, 0, 3),
-  height: '100%',
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  backgroundColor: theme.palette.grey[800],
-  borderTopRightRadius: 50,
-  borderBottomRightRadius: 50,
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}))
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  display: 'flex',
-  color: 'text.primary',
-  width: '100%',
-  '& .MuiInputBase-input': {
-    '&:focus': {
-      border: `1px solid ${theme.palette.secondary.main}`,
-    },
-    padding: theme.spacing(1, 0, 1, 2),
-    // vertical padding + font size from searchIcon
-    marginRight: `calc(1.5em + ${theme.spacing(6)})`,
-    transition: theme.transitions.create('width'),
-    borderTopLeftRadius: 50,
-    borderBottomLeftRadius: 50,
-    backgroundColor: alpha(theme.palette.background.default, 0.4),
-    border: `1px solid ${theme.palette.grey[800]}`,
-    width: '100%',
-  },
-}))
-
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  height: '100%',
-  backgroundColor: theme.palette.grey[800],
-
-  color: 'white',
-  borderRadius: 50,
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.grey[800], 0.8),
-  },
-}))
+import SearchBar, { StyledIconButton } from '../SearchBar'
 
 // TODO: Add Search Functionality (Get Search Results and store in VideoData)
 
@@ -85,6 +21,7 @@ const NavBar = () => {
   const dispatch = useDispatch()
 
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   // Menu
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -98,40 +35,6 @@ const NavBar = () => {
 
   // SearchBar
   const [expandSearchBar, setExpandSearchBar] = React.useState(false)
-  const SearchBar = ({ width, margin }) => {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', width: width, margin: margin }}>
-        {expandSearchBar && (
-          <StyledIconButton
-            sx={{ mr: 1 }}
-            onClick={() => setExpandSearchBar(false)}>
-            <ArrowBack />
-          </StyledIconButton>
-        )}
-        <Search>
-          <StyledInputBase
-            inputComponent={'input'}
-            type="search"
-            placeholder="Search"
-            inputProps={{ 'aria-label': 'search' }}
-          />
-          <Tooltip title="Search">
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-          </Tooltip>
-        </Search>
-        <Tooltip title="Search with your voice">
-          <StyledIconButton
-            size="medium"
-            aria-label="search with your voice"
-            edge="end">
-            <MicIcon />
-          </StyledIconButton>
-        </Tooltip>
-      </div>
-    )
-  }
 
   return (
     <Box
@@ -139,12 +42,14 @@ const NavBar = () => {
       component={'nav'}>
       <AppBar
         position="static"
-        sx={{ backgroundColor: 'background.default', backgroundImage: 'none', boxShadow: 'none', px: 1 }}>
+        sx={{ backgroundColor: 'background.default', backgroundImage: 'none', boxShadow: 'none', px: 1, minHeight: '64px' }}>
         <Toolbar sx={{ margin: '0!important', padding: '0!important', display: 'flex', alignItems: 'center' }}>
           {isMd && expandSearchBar ? (
             <SearchBar
-              width="100vw"
+              width="100%"
               margin="0 1rem"
+              expandSearchBar={expandSearchBar}
+              setExpandSearchBar={setExpandSearchBar}
             />
           ) : (
             <>
@@ -176,11 +81,10 @@ const NavBar = () => {
                 </Link>
               </Container>
               {!isMd && (
-                <Container
-                  className="nav-mid"
-                  sx={{ display: 'flex', alignItems: 'center' }}>
-                  <SearchBar />
-                </Container>
+                <SearchBar
+                  expandSearchBar={expandSearchBar}
+                  setExpandSearchBar={setExpandSearchBar}
+                />
               )}
               <Container
                 className="nav-right"
@@ -207,7 +111,7 @@ const NavBar = () => {
                 )}
                 <Tooltip
                   title="Settings"
-                  sx={{ mr: 1 }}>
+                  sx={{ mr: isSm ? 0 : 1 }}>
                   <IconButton
                     color="text.primary"
                     size="medium"
@@ -222,11 +126,13 @@ const NavBar = () => {
                   setAnchorEl={setAnchorEl}
                   handleClose={handleClose}
                 />
-                <CustomButton
-                  buttonType={ButtonTypes.SIGNIN}
-                  text={'Sign In'}
-                  startIcon={<AvatarIcon />}
-                />
+                {!isSm && (
+                  <CustomButton
+                    buttonType={ButtonTypes.SIGNIN}
+                    text={'Sign In'}
+                    startIcon={<AvatarIcon />}
+                  />
+                )}
               </Container>
             </>
           )}

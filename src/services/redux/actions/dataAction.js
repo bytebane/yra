@@ -1,5 +1,11 @@
 import { STORE_DATA } from './actionTypes'
 
+export const storeVideoData = (payload) => {
+  return {
+    type: STORE_DATA.VIDEODATA,
+    payload: payload,
+  }
+}
 export const storeVideosData = (payload) => {
   return {
     type: STORE_DATA.VIDEOSDATA,

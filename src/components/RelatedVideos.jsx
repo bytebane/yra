@@ -17,7 +17,7 @@ const RelatedVideos = ({ videoId }) => {
             title={video.snippet.title}
             thumbnail={video.snippet.thumbnails.high.url}
             channelTitle={video.snippet.channelTitle}
-            viewsCount={video.statistics.viewCount}
+            viewsCount={video.statistics && video.statistics.viewCount}
             uploadedAt={video.snippet.publishedAt}
           />
         ))}

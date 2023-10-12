@@ -71,7 +71,8 @@ const VideoCardListItem = ({ videoId, title, thumbnail, channelTitle, viewsCount
                 WebkitLineClamp: 1,
                 WebkitBoxOrient: 'vertical',
               }}>
-              {convertCount(viewsCount)} views • {convertDateToRelativeTime(uploadedAt)}
+              {viewsCount && convertCount(viewsCount) + ' views  • '}
+              {convertDateToRelativeTime(uploadedAt)}
             </Typography>
           </CardContent>
         </Box>
